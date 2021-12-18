@@ -3,7 +3,6 @@
 ### ⭐ /location and /register
 1.ได้ status 200
 
-
 ### ⭐ /getdata
 1. ได้ status 200 เมื่อกรอกข้อมูลครบ
 2. ได้ status 500 เมื่อ id ไม่ถูกต้อง
