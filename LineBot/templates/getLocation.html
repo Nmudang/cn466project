@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+  
+<body>
+  <ons-page >
+  <div style="text-align: center; margin-top: 30px;">
+<h2>Gelocation</h2>
+
+<div id="addr">
+  <p>Click the button to get your coordinates.</p>
+<ons-button onclick="getLocation()"class="red" >get Location</ons-button>
+</div>
+<div id="desp"></div>
+<div id="demo"></div>
+
+</div>
+</ons-page>
+
+
+</body>
+<script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+  // liff.init({ liffId: "1656631021-G7wYLBOY" }, () => {
+  //       if (liff.isLoggedIn()) {
+  //         console.log('login')
+  //       } else {
+  //         liff.login();
+  //       }
+  //     }, err => console.error(err.code, error.message));
+  var result = ''
+  async function success(pos) {
+    var crd = pos.coords;
+        var options = {
+          method: 'POST',
+          url: `http://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}&lon=${crd.longitude}&appid=8dfcf79fc74a7d948844d628cfaaf927`
+        };
+        axios.request(options)
+        .then((res) => {
+          result = res
+          console.log(result)
+          document.getElementById("addr").innerHTML = `latitude = ${crd.latitude} longitude = ${crd.longitude}\n
+          <p><ons-button onclick="showData()"class="red" >รายละเอียดอื่น</ons-button></p>`
+        })
+
+  }
+  function showData() {
+    document.getElementById("desp").innerHTML = `
+    <p><span style="color:red"><b>สภาพอากาศ</b></span> ${result.data.weather[0].description} </p>
+    <p><span style="color:red"><b>อุณหภูมิสูงสุด</b></span> ${result.data.main.temp_max}</p>
+    <p><span style="color:red"><b>อุณหภูมิต่ำสุด</b></span> ${result.data.main.temp_min} </p>
+    <p><span style="color:red"><b>ความชื้น</b></span>  ${result.data.main.humidity} </p>
+    <p><span style="color:red"><b>ความดัน</b></span>  ${result.data.main.pressure} </p>
+    `
+  }
+  function error(err) {
+    document.getElementById("demo").innerHTML = err.message
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+  function getLocation() {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  }
+</script>
+</html>

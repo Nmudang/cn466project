@@ -1,0 +1,60 @@
+<html>
+<head></head>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script lang="js">
+        async function run(){
+            const trainingUrl = 'training.csv';
+            const trainingData = tf.data.csv(trainingUrl, {
+                columnConfigs: {
+                    label: {
+                        isLabel: true
+                    }
+                }
+            }); 
+            
+            const convertedTrainingData = trainingData.map(({xs, ys}) => {
+                      return{ xs: Object.values(xs), ys: Object.values(ys)};
+                  }).batch(10);
+
+                  
+            const testingUrl = 'testing.csv';
+            const testingData = tf.data.csv(testingUrl, {
+                columnConfigs: {
+                    label: {
+                        isLabel: true
+                    }
+                }
+            }); 
+            const convertedTestingData = testingData.map(({xs, ys}) => {
+                      return{ xs: Object.values(xs), ys: Object.values(ys)};
+                  }).batch(10);
+                  
+            const numOfFeatures = (await trainingData.columnNames()).length - 1;
+            console.log(numOfFeatures)
+             
+            const model = tf.sequential();
+            model.add(tf.layers.dense({inputShape: [numOfFeatures], activation: "relu", units: 256}))
+            model.add(tf.layers.dense({units: 2, activation: 'linear'}));
+            model.compile({optimizer: 'sgd', loss: 'meanSquaredError',metrics:['accuracy']});
+            
+            await model.fitDataset(convertedTrainingData, 
+                             {epochs:20,
+                              validationData: convertedTestingData,
+                              callbacks:{
+                                  onEpochEnd: async(epoch, logs) =>{
+                                      console.log("Epoch: " + epoch + " Loss: " + logs.loss + " Accuracy: " + logs.acc);
+                                  }
+                              }});
+            console.log(model)
+            // const predictClasses = model.predict(tf.tensor2d( [[70.74, 32.91],[70.39, 32.93],[66.18, 29.63]]));
+            // const yourClass = predictClasses.argMax(-1).dataSync()[0]
+            // predictClasses.print()
+            // console.log(`${predictClasses} ${yourClass}`)
+            await model.save('downloads://my_model');
+        }
+        // const s = tf.loadLayersModel('model.json');
+        run();
+    </script>
+<body>
+</body>
+</html>

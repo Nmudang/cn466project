@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+</head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<body>
+    <ons-page>
+        <div style="text-align: center; margin-top: 30px;">
+            สมัครข้อมูลเพื่อมรับแจ้งเตือน
+          <p>
+            <label for="firstname">ชื่อ</label>
+            <ons-input id="firstname" modifier="underbar" placeholder="ชื่อ" float required></ons-input>
+          </p>
+          <p style="margin-top: 30px;">
+            <ons-button onclick="regis()">Sign in</ons-button>
+          </p>
+        </div>
+        <div id="demo"></div>
+        <div id="demo2"></div>
+      </ons-page>
+</body>
+
+<script src="https://static.line-scdn.net/liff/edge/versions/2.9.0/sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+      liff.init({ liffId: "1656631021-Zg1lqQxl" }, () => {
+        if (liff.isLoggedIn()) {
+        } else {
+          liff.login();
+        }
+      }, err => console.error(err.code, error.message));
+
+    async function regis() {
+        var firstname = document.getElementById('firstname').value;
+        liff.getProfile().then(profile => {
+          const userProfile = profile.userId;
+          const displayName = profile.displayName;
+          const statusMessage = profile.statusMessage;
+          // const emails = liff.getDecodedIDToken().email;
+          // document.getElementById("demo2").innerHTML = emails
+          axios.post('/getdata', {
+                name: firstname,
+                id:userProfile
+                }).then((res) => {
+                if(res.status === 200) {
+                  liff.closeWindow()
+              }
+           })
+           .catch((err) => {
+            document.getElementById("demo").innerHTML = err
+           });
+        })
+        .catch(
+          err => console.error(err)
+        );  
+};
+
+</script>
+</html>
