@@ -1,0 +1,33 @@
+{
+  "name": "websocket",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "npm start && mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@line/bot-sdk": "^7.4.0",
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^6.2.0",
+    "express": "^4.17.2",
+    "firebase": "^9.4.1",
+    "firebase-tools": "^9.22.0",
+    "mqtt": "^4.2.8",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^3.0.0",
+    "path": "^0.12.7",
+    "should": "^13.2.3",
+    "uid": "^2.0.0",
+    "ws": "^8.2.3"
+  },
+  "description": ""
+}
