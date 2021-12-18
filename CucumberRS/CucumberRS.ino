@@ -79,7 +79,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void setupNetwork() {
-  WiFi.begin("True_2.4G_316", "0861005637");
+  WiFi.begin("True_2.4G_316", "password");
   Serial.print("connecting");
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
