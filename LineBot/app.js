@@ -5,7 +5,7 @@ import {addUser, getData,} from './database.js'
 import dotenv from 'dotenv';
 import axios from 'axios';
 import mqtt from 'mqtt';
-// import {predict} from './tensorflow/load.js'
+import {predict} from './tensorflow/load.js'
 // import ngrok from 'ngrok';
 import cron from 'node-cron'
 import bodyParser from 'body-parser'
@@ -40,7 +40,7 @@ cron.schedule('0 0 7 * * *', async () => {
   const data = await getData('/users')
   let pred = 'unpredictable'
   try {
-    // pred = await predict([payloads.humidity,payloads.pressure])
+    pred = await predict([payloads.humidity,payloads.pressure])
   } catch(err) {
     console.error(err)
   }
